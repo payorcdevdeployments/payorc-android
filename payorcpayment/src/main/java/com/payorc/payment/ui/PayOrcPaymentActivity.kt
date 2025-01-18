@@ -2,15 +2,14 @@ package com.payorc.payment.ui
 
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
-import com.payorc.payment.App
-import com.payorc.payment.R
+import com.payorc.payment.PaymentApplication
 import com.payorc.payment.databinding.ActivityPayOrcPaymentBinding
+import com.payorc.payment.repository.Repository
+import com.payorc.payment.repository.RepositoryImpl
 import com.payorc.payment.service.MyViewModelFactory
+import com.payorc.payment.service.RetrofitInstance
 
 class PayOrcPaymentActivity : AppCompatActivity() {
 
@@ -18,17 +17,26 @@ class PayOrcPaymentActivity : AppCompatActivity() {
 
     private lateinit var myViewModel: MyViewModel
 
+    private val retrofitInstance: RetrofitInstance by lazy {
+        RetrofitInstance
+    }
+
+    // Lazy initialization of MyRepository
+    private val myRepository: Repository by lazy {
+        RepositoryImpl(retrofitInstance.apiService)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPayOrcPaymentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Access MyRepository from Application class
-        val myRepository = (application as App).myRepository
+        val myRepository = myRepository
 
         // Initialize ViewModel with MyRepository
         val viewModelFactory = MyViewModelFactory(myRepository)
-        myViewModel = ViewModelProvider(this, viewModelFactory).get(MyViewModel::class.java)
+        myViewModel = ViewModelProvider(this, viewModelFactory)[MyViewModel::class.java]
         myViewModel.checkKeysSecret()
         myViewModel.data.observe(this) { data ->
             // Update UI with API data

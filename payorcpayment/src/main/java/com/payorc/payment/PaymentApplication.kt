@@ -5,9 +5,11 @@ import com.payorc.payment.repository.Repository
 import com.payorc.payment.repository.RepositoryImpl
 import com.payorc.payment.service.RetrofitInstance
 
-class App :Application(){
+class PaymentApplication : Application() {
 
-    val retrofitInstance: RetrofitInstance by lazy {
+
+/*
+    private val retrofitInstance: RetrofitInstance by lazy {
         RetrofitInstance
     }
 
@@ -16,6 +18,17 @@ class App :Application(){
         RepositoryImpl(retrofitInstance.apiService)
     }
 
+    companion object {
+        private var instance: PaymentApplication? = null
 
+        fun getInstance(): PaymentApplication {
+            return instance!!
+        }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+    }*/
 
 }
