@@ -12,8 +12,10 @@ import com.payorc.payment.model.order_create.PaymentRequest
 import com.payorc.payment.model.order_status.OrderStatus
 import com.payorc.payment.ui.PayOrcPaymentActivity
 import com.payorc.payment.utils.Keys.KEY_CREATE_ORDER
+import com.payorc.payment.utils.Keys.PAYMENT_ERROR_MESSAGE
 import com.payorc.payment.utils.Keys.PAYMENT_RESULT
 import com.payorc.payment.utils.Keys.PAYMENT_RESULT_DATA
+import com.payorc.payment.utils.Keys.PAYMENT_RESULT_STATUS
 import com.payorc.payment.utils.jsonToGSON
 import com.payorc.payment.utils.parcelable
 import com.sample.payorc.databinding.ActivityMainBinding
@@ -24,7 +26,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var broadcastReceiver: BroadcastReceiver
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -32,10 +33,17 @@ class MainActivity : AppCompatActivity() {
 
         broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                val data = intent?.parcelable<OrderStatus>(PAYMENT_RESULT_DATA)
+                val status = intent?.getBooleanExtra(PAYMENT_RESULT_STATUS, false)
+                if (status == true) {
+                    val data = intent.parcelable<OrderStatus>(PAYMENT_RESULT_DATA)
+                    Log.e("broadcastReceiver", "" + data)
+                }
+                else{
 
-                Log.e("broadcastReceiver",""+data)
 
+                    val error = intent?.getStringExtra(PAYMENT_ERROR_MESSAGE)
+                    Log.e("broadcastReceiver","Error message"+ error)
+                }
             }
         }
 

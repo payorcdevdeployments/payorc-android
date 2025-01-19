@@ -13,7 +13,9 @@ object ApiContent {
 object Keys{
     const val KEY_CREATE_ORDER = "KEY_CREATE_ORDER"
     const val PAYMENT_RESULT = "PAYMENT_RESULT"
+    const val PAYMENT_RESULT_STATUS = "PAYMENT_RESULT_STATUS"
     const val PAYMENT_RESULT_DATA = "PAYMENT_RESULT_DATA"
+    const val PAYMENT_ERROR_MESSAGE = "PAYMENT_ERROR_MESSAGE"
 }
 
 

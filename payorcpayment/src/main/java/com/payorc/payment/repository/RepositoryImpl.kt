@@ -1,5 +1,6 @@
 package com.payorc.payment.repository
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +13,7 @@ import com.payorc.payment.model.order_create.CreatePaymentRequest
 import com.payorc.payment.service.MyApiService
 import com.payorc.payment.ui.PaymentUiState
 import com.payorc.payment.utils.errorMessage
+import com.payorc.payment.utils.isOnline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 
-class RepositoryImpl(private val apiService: MyApiService): Repository {
+class RepositoryImpl(private val apiService: MyApiService , private val context: Context): Repository {
 
 
     private val _uiState = MutableStateFlow(PaymentUiState())
@@ -52,6 +54,14 @@ class RepositoryImpl(private val apiService: MyApiService): Repository {
 
     override suspend fun checkKeysSecret(request: KeySecretRequest) {
 
+        if (!context.isOnline()){
+            _uiState.update {
+                it.copy(
+                    errorToastMessage = "No network connection!"
+                )
+            }
+            return
+        }
         _uiState.update {
             it.copy(
                 isLoading = true
@@ -105,7 +115,14 @@ class RepositoryImpl(private val apiService: MyApiService): Repository {
     }
 
     override suspend fun createOrder(request: CreatePaymentRequest) {
-
+        if (!context.isOnline()){
+            _uiState.update {
+                it.copy(
+                    errorToastMessage = "No network connection!"
+                )
+            }
+            return
+        }
         _uiState.update {
             it.copy(
                 isLoading = true
@@ -145,7 +162,14 @@ class RepositoryImpl(private val apiService: MyApiService): Repository {
     }
 
     override suspend fun checkPaymentStatus(orderId: String) {
-
+        if (!context.isOnline()){
+            _uiState.update {
+                it.copy(
+                    errorToastMessage = "No network connection!"
+                )
+            }
+            return
+        }
         _uiState.update {
             it.copy(
                 isLoading = true

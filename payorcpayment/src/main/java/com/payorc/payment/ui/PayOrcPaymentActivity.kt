@@ -31,7 +31,6 @@ import com.payorc.payment.utils.Keys
 import com.payorc.payment.utils.parcelable
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.security.Key
 
 class PayOrcPaymentActivity : AppCompatActivity() {
 
@@ -45,7 +44,7 @@ class PayOrcPaymentActivity : AppCompatActivity() {
 
     // Lazy initialization of MyRepository
     private val myRepository: Repository by lazy {
-        RepositoryImpl(retrofitInstance.apiService)
+        RepositoryImpl(retrofitInstance.apiService, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,10 +59,10 @@ class PayOrcPaymentActivity : AppCompatActivity() {
         // Initialize ViewModel with MyRepository
         val viewModelFactory = MyViewModelFactory(myRepository)
         myViewModel = ViewModelProvider(this, viewModelFactory)[MyViewModel::class.java]
-        myViewModel.checkKeysSecret()
 
         binding.close.setOnClickListener {
             val intent = Intent(Keys.PAYMENT_RESULT)
+            intent.putExtra(Keys.PAYMENT_RESULT_STATUS, true)
             intent.putExtra(Keys.PAYMENT_RESULT_DATA, myViewModel.uiState.value.orderStatus)
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
             finish() // Close the activity
@@ -75,9 +74,10 @@ class PayOrcPaymentActivity : AppCompatActivity() {
                     binding.progressBar.isVisible = uiState.isLoading
                     binding.close.isVisible = uiState.orderStatusSuccess
 
-                    uiState.errorToastMessage?.let {
-                        showToast(it)
+                    uiState.errorToastMessage?.let { message->
+                        showToast(message)
                         myViewModel.clearErrorMessage()
+                        errorHandling(message)
                     }
 
                     if (uiState.checkKeySuccess) {
@@ -104,6 +104,14 @@ class PayOrcPaymentActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun errorHandling(message: String) {
+        val intent = Intent(Keys.PAYMENT_RESULT)
+        intent.putExtra(Keys.PAYMENT_RESULT_STATUS, false)
+        intent.putExtra(Keys.PAYMENT_ERROR_MESSAGE,message)
+        LocalBroadcastManager.getInstance(this@PayOrcPaymentActivity).sendBroadcast(intent)
+        finish() // Close the activity
     }
 
     @SuppressLint("SetJavaScriptEnabled")
