@@ -31,10 +31,23 @@ android {
         jvmTarget = "1.8"
     }
 
-    viewBinding {
-        enable = true
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true
     }
-
+    flavorDimensions += listOf("dimensions")
+    productFlavors {
+        create("dev") {
+            dimension = "dimensions"
+            buildConfigField("String", "BASE_URL", "\"https://nodeserver.payorc.com\"")
+            buildConfigField("String", "ENVIRONMENT", "\"test\"")
+        }
+        create("prod") {
+            dimension = "dimensions"
+            buildConfigField("String", "BASE_URL", "\"https://nodeserver.payorc.com\"")
+            buildConfigField("String", "ENVIRONMENT", "\"live\"")
+        }
+    }
 }
 
 dependencies {
@@ -51,7 +64,5 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
-
-
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 }

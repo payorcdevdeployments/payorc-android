@@ -33,8 +33,18 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    viewBinding {
-        enable = true
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true
+    }
+    flavorDimensions += listOf("dimensions")
+    productFlavors {
+        create("dev") {
+            dimension = "dimensions"
+        }
+        create("prod") {
+            dimension = "dimensions"
+        }
     }
 
 }
