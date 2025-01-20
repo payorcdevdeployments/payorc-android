@@ -9,9 +9,9 @@ import com.payorc.payment.repository.PayOrcRepository
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class PayOrcViewModel(private val repository: PayOrcRepository):ViewModel() {
+class PayOrcViewModel(private val repository: PayOrcRepository) : ViewModel() {
 
-    val uiState:StateFlow<PaymentUiState> = repository.uiState
+    val uiState: StateFlow<PaymentUiState> = repository.uiState
 
     init {
         checkKeysSecret()
@@ -20,11 +20,13 @@ class PayOrcViewModel(private val repository: PayOrcRepository):ViewModel() {
     private fun checkKeysSecret() {
 
         viewModelScope.launch {
-            repository.checkKeysSecret(PayOrcKeySecretRequest(
-                merchantSecret = PayOrcConfig.getInstance().merchantSecret,
-                merchantKey = PayOrcConfig.getInstance().merchantKey,
-                env = PayOrcConfig.getInstance().env
-            ))
+            repository.checkKeysSecret(
+                PayOrcKeySecretRequest(
+                    merchantSecret = PayOrcConfig.getInstance().merchantSecret,
+                    merchantKey = PayOrcConfig.getInstance().merchantKey,
+                    env = PayOrcConfig.getInstance().env
+                )
+            )
         }
     }
 
@@ -42,8 +44,8 @@ class PayOrcViewModel(private val repository: PayOrcRepository):ViewModel() {
         repository.checkKeySuccess()
     }
 
-    fun clearCreateOrderSuccesss() {
-        repository.clearCreateOrderSuccesss()
+    fun clearCreateOrderSuccess() {
+        repository.clearCreateOrderSuccess()
     }
 
     fun checkPaymentStatus(pOrderId: String) {

@@ -2,6 +2,7 @@ package com.payorc.payment.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.webkit.JavascriptInterface
@@ -96,7 +97,7 @@ class PayOrcPaymentActivity : AppCompatActivity() {
                         }
                     }
                     if (uiState.createOrderSuccess) {
-                        payOrcViewModel.clearCreateOrderSuccesss()
+                        payOrcViewModel.clearCreateOrderSuccess()
                         uiState.createOrderResponse?.let {
                             loadWebView(orderResponse = it)
                         }
@@ -133,7 +134,6 @@ class PayOrcPaymentActivity : AppCompatActivity() {
             override fun shouldOverrideUrlLoading(
                 view: WebView?, request: WebResourceRequest?
             ): Boolean {
-                binding.progressBar.isVisible = true
                 return false // Load URL in the WebView itself
             }
 
@@ -145,14 +145,18 @@ class PayOrcPaymentActivity : AppCompatActivity() {
                 // Display an error message or custom UI
             }
 
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                binding.progressBar.isVisible = true
+            }
+
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                Log.e("WebView", "url " + url)
+                Log.e("WebView", "url $url")
                 binding.progressBar.isVisible = false
                 // Inject JavaScript after the page loads
                 injectJavaScript()
             }
-
         }
 
         // Set a WebChromeClient to handle JavaScript alerts, titles, and progress
@@ -161,9 +165,7 @@ class PayOrcPaymentActivity : AppCompatActivity() {
         // Load a URL
         if (orderResponse.iframeLink != null) binding.webView.loadUrl(orderResponse.iframeLink)
         else showToast("Payment Page Not Loading!")
-//        injectJavaScript()
     }
-
 
     // JavaScript injection logic
     private fun injectJavaScript() {
@@ -186,7 +188,6 @@ class PayOrcPaymentActivity : AppCompatActivity() {
 
     // JavaScript Interface to handle post messages
     inner class WebAppInterface {
-
         @JavascriptInterface
         fun onPostMessage(data: String) {
             try {
@@ -205,5 +206,4 @@ class PayOrcPaymentActivity : AppCompatActivity() {
     private fun showToast(it: String) {
         Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
     }
-
 }

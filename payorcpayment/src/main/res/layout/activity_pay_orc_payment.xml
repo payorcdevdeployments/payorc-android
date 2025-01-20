@@ -14,16 +14,15 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/close"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:contentDescription="@null"
-        android:padding="5dp"
-        android:src="@android:drawable/ic_notification_clear_all"
+        android:src="@drawable/close_icon"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@android:color/black" />
+        tools:visibility="visible" />
 
     <ProgressBar
         android:id="@+id/progressBar"
