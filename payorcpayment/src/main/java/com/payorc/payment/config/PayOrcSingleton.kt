@@ -1,6 +1,6 @@
 package com.payorc.payment.config
 
-open class SingletonHolderAuth<out T : Any>(creator: () -> T) {
+open class PayOrcSingleton<out T : Any>(creator: () -> T) {
     private var creator: (() -> T)? = creator
 
     @Volatile

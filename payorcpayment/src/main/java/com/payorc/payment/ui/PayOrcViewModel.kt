@@ -3,13 +3,13 @@ package com.payorc.payment.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.payorc.payment.config.PayOrcConfig
-import com.payorc.payment.model.keys_secret.KeySecretRequest
-import com.payorc.payment.model.order_create.CreatePaymentRequest
-import com.payorc.payment.repository.Repository
+import com.payorc.payment.model.keys_secret.PayOrcKeySecretRequest
+import com.payorc.payment.model.order_create.PayOrcCreatePaymentRequest
+import com.payorc.payment.repository.PayOrcRepository
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class MyViewModel(private val repository: Repository):ViewModel() {
+class PayOrcViewModel(private val repository: PayOrcRepository):ViewModel() {
 
     val uiState:StateFlow<PaymentUiState> = repository.uiState
 
@@ -20,7 +20,7 @@ class MyViewModel(private val repository: Repository):ViewModel() {
     private fun checkKeysSecret() {
 
         viewModelScope.launch {
-            repository.checkKeysSecret(KeySecretRequest(
+            repository.checkKeysSecret(PayOrcKeySecretRequest(
                 merchantSecret = PayOrcConfig.getInstance().merchantSecret,
                 merchantKey = PayOrcConfig.getInstance().merchantKey,
                 env = PayOrcConfig.getInstance().env
@@ -32,7 +32,7 @@ class MyViewModel(private val repository: Repository):ViewModel() {
         repository.clearErrorMessage()
     }
 
-    fun createOrder(request: CreatePaymentRequest) {
+    fun createOrder(request: PayOrcCreatePaymentRequest) {
         viewModelScope.launch {
             repository.createOrder(request)
         }

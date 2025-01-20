@@ -6,10 +6,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 
 fun Context.isOnline(): Boolean {
-
-    var isConnected = false
+    val isConnected: Boolean
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetwork = connectivityManager.activeNetwork ?: return false
+    connectivityManager.activeNetwork ?: return false
     val networkCapabilities =
         connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
             ?: return false
@@ -19,9 +18,7 @@ fun Context.isOnline(): Boolean {
         networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
         else -> false
     }
-
     return isConnected
 }
 
-
-fun Activity.isOnline(): Boolean  = (this as Context).isOnline()
+fun Activity.isOnline(): Boolean = (this as Context).isOnline()

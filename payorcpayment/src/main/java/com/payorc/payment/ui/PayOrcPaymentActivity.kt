@@ -20,14 +20,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.payorc.payment.databinding.ActivityPayOrcPaymentBinding
-import com.payorc.payment.model.order_create.CreatePaymentRequest
-import com.payorc.payment.model.order_create.CreatePaymentResponse
+import com.payorc.payment.model.order_create.PayOrcCreatePaymentRequest
+import com.payorc.payment.model.order_create.PayOrcCreatePaymentResponse
 import com.payorc.payment.model.order_create.PaymentRequest
-import com.payorc.payment.repository.Repository
-import com.payorc.payment.repository.RepositoryImpl
-import com.payorc.payment.service.MyViewModelFactory
-import com.payorc.payment.service.RetrofitInstance
-import com.payorc.payment.utils.Keys
+import com.payorc.payment.repository.PayOrcRepository
+import com.payorc.payment.repository.PayOrcRepositoryImpl
+import com.payorc.payment.service.PayOrcRetrofitInstance
+import com.payorc.payment.service.PayOrcViewModelFactory
+import com.payorc.payment.utils.PayOrcConstants
 import com.payorc.payment.utils.parcelable
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -36,15 +36,15 @@ class PayOrcPaymentActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPayOrcPaymentBinding
 
-    private lateinit var myViewModel: MyViewModel
+    private lateinit var payOrcViewModel: PayOrcViewModel
 
-    private val retrofitInstance: RetrofitInstance by lazy {
-        RetrofitInstance
+    private val retrofitInstance: PayOrcRetrofitInstance by lazy {
+        PayOrcRetrofitInstance
     }
 
     // Lazy initialization of MyRepository
-    private val myRepository: Repository by lazy {
-        RepositoryImpl(retrofitInstance.apiService, this)
+    private val myRepository: PayOrcRepository by lazy {
+        PayOrcRepositoryImpl(retrofitInstance.apiService, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,40 +52,43 @@ class PayOrcPaymentActivity : AppCompatActivity() {
         binding = ActivityPayOrcPaymentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val request = intent.parcelable<PaymentRequest>(Keys.KEY_CREATE_ORDER)
+        val request = intent.parcelable<PaymentRequest>(PayOrcConstants.KEY_CREATE_ORDER)
         // Access MyRepository from Application class
         val myRepository = myRepository
 
         // Initialize ViewModel with MyRepository
-        val viewModelFactory = MyViewModelFactory(myRepository)
-        myViewModel = ViewModelProvider(this, viewModelFactory)[MyViewModel::class.java]
+        val viewModelFactory = PayOrcViewModelFactory(myRepository)
+        payOrcViewModel = ViewModelProvider(this, viewModelFactory)[PayOrcViewModel::class.java]
 
         binding.close.setOnClickListener {
-            val intent = Intent(Keys.PAYMENT_RESULT)
-            intent.putExtra(Keys.PAYMENT_RESULT_STATUS, true)
-            intent.putExtra(Keys.PAYMENT_RESULT_DATA, myViewModel.uiState.value.orderStatus)
+            val intent = Intent(PayOrcConstants.PAY_ORC_PAYMENT_RESULT)
+            intent.putExtra(PayOrcConstants.PAYMENT_RESULT_STATUS, true)
+            intent.putExtra(
+                PayOrcConstants.PAYMENT_RESULT_DATA,
+                payOrcViewModel.uiState.value.transaction
+            )
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
             finish() // Close the activity
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                myViewModel.uiState.collect { uiState ->
+                payOrcViewModel.uiState.collect { uiState ->
 
                     binding.progressBar.isVisible = uiState.isLoading
                     binding.close.isVisible = uiState.orderStatusSuccess
 
-                    uiState.errorToastMessage?.let { message->
+                    uiState.errorToastMessage?.let { message ->
                         showToast(message)
-                        myViewModel.clearErrorMessage()
+                        payOrcViewModel.clearErrorMessage()
                         errorHandling(message)
                     }
 
                     if (uiState.checkKeySuccess) {
                         Log.e("checkKeyApi", "Valid")
-                        myViewModel.checkKeySuccess()
+                        payOrcViewModel.checkKeySuccess()
                         if (uiState.checkKeyApi) {
-                            if (request != null) myViewModel.createOrder(
-                                request = CreatePaymentRequest(
+                            if (request != null) payOrcViewModel.createOrder(
+                                request = PayOrcCreatePaymentRequest(
                                     data = request
                                 )
                             )
@@ -93,29 +96,26 @@ class PayOrcPaymentActivity : AppCompatActivity() {
                         }
                     }
                     if (uiState.createOrderSuccess) {
-                        myViewModel.clearCreateOrderSuccesss()
-
+                        payOrcViewModel.clearCreateOrderSuccesss()
                         uiState.createOrderResponse?.let {
                             loadWebView(orderResponse = it)
                         }
-
                     }
-
                 }
             }
         }
     }
 
     private fun errorHandling(message: String) {
-        val intent = Intent(Keys.PAYMENT_RESULT)
-        intent.putExtra(Keys.PAYMENT_RESULT_STATUS, false)
-        intent.putExtra(Keys.PAYMENT_ERROR_MESSAGE,message)
+        val intent = Intent(PayOrcConstants.PAY_ORC_PAYMENT_RESULT)
+        intent.putExtra(PayOrcConstants.PAYMENT_RESULT_STATUS, false)
+        intent.putExtra(PayOrcConstants.PAYMENT_ERROR_MESSAGE, message)
         LocalBroadcastManager.getInstance(this@PayOrcPaymentActivity).sendBroadcast(intent)
         finish() // Close the activity
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun loadWebView(orderResponse: CreatePaymentResponse) {
+    private fun loadWebView(orderResponse: PayOrcCreatePaymentResponse) {
         // Enable JavaScript
         val webSettings: WebSettings = binding.webView.settings
         webSettings.javaScriptEnabled = true
@@ -136,6 +136,7 @@ class PayOrcPaymentActivity : AppCompatActivity() {
                 binding.progressBar.isVisible = true
                 return false // Load URL in the WebView itself
             }
+
             override fun onReceivedError(
                 view: WebView?,
                 request: WebResourceRequest?,
@@ -146,7 +147,7 @@ class PayOrcPaymentActivity : AppCompatActivity() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                Log.e("WebView","url "+url)
+                Log.e("WebView", "url " + url)
                 binding.progressBar.isVisible = false
                 // Inject JavaScript after the page loads
                 injectJavaScript()
@@ -167,7 +168,8 @@ class PayOrcPaymentActivity : AppCompatActivity() {
     // JavaScript injection logic
     private fun injectJavaScript() {
         Log.e("WebView", "injectJavaScript")
-        binding.webView.evaluateJavascript("""
+        binding.webView.evaluateJavascript(
+            """
             console.log("Injecting JavaScript...");
             var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
             var eventer = window[eventMethod];
@@ -178,7 +180,8 @@ class PayOrcPaymentActivity : AppCompatActivity() {
                 console.log("Message received: ", e.data);
                 AndroidBridge.onPostMessage(e.data);
             }, false);
-        """.trimIndent(), null)
+        """.trimIndent(), null
+        )
     }
 
     // JavaScript Interface to handle post messages
@@ -190,11 +193,9 @@ class PayOrcPaymentActivity : AppCompatActivity() {
                 // Parse the JSON data
                 val jsonData = JSONObject(data)
                 Log.d("WebView", "Received data: $jsonData")
-
-                if (!jsonData.optString("p_order_id").isNullOrEmpty()){
-                    myViewModel.checkPaymentStatus(pOrderId = jsonData.optString("p_order_id"))
+                if (!jsonData.optString("p_order_id").isNullOrEmpty()) {
+                    payOrcViewModel.checkPaymentStatus(pOrderId = jsonData.optString("p_order_id"))
                 }
-
             } catch (e: Exception) {
                 Log.e("WebView", "Error parsing JSON: ${e.message}")
             }

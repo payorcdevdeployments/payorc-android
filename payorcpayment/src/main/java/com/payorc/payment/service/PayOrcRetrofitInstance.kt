@@ -7,18 +7,18 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-object RetrofitInstance {
+object PayOrcRetrofitInstance {
 
-    val apiService: MyApiService by lazy {
+    val apiService: PayOrcApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .client(getOkHttpClient())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(MyApiService::class.java)
+            .create(PayOrcApiService::class.java)
     }
 
-    fun getOkHttpClient(): OkHttpClient {
+    private fun getOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         val client: OkHttpClient = OkHttpClient.Builder().addInterceptor(interceptor).build()

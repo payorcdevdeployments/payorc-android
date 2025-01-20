@@ -9,13 +9,9 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.payorc.payment.model.order_create.PaymentRequest
-import com.payorc.payment.model.order_status.OrderStatus
+import com.payorc.payment.model.order_status.PayOrcTransaction
 import com.payorc.payment.ui.PayOrcPaymentActivity
-import com.payorc.payment.utils.Keys.KEY_CREATE_ORDER
-import com.payorc.payment.utils.Keys.PAYMENT_ERROR_MESSAGE
-import com.payorc.payment.utils.Keys.PAYMENT_RESULT
-import com.payorc.payment.utils.Keys.PAYMENT_RESULT_DATA
-import com.payorc.payment.utils.Keys.PAYMENT_RESULT_STATUS
+import com.payorc.payment.utils.PayOrcConstants
 import com.payorc.payment.utils.jsonToGSON
 import com.payorc.payment.utils.parcelable
 import com.sample.payorc.databinding.ActivityMainBinding
@@ -33,29 +29,27 @@ class MainActivity : AppCompatActivity() {
 
         broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                val status = intent?.getBooleanExtra(PAYMENT_RESULT_STATUS, false)
+                val status = intent?.getBooleanExtra(PayOrcConstants.PAYMENT_RESULT_STATUS, false)
                 if (status == true) {
-                    val data = intent.parcelable<OrderStatus>(PAYMENT_RESULT_DATA)
+                    val data =
+                        intent.parcelable<PayOrcTransaction>(PayOrcConstants.PAYMENT_RESULT_DATA)
                     Log.e("broadcastReceiver", "" + data)
-                }
-                else{
-
-
-                    val error = intent?.getStringExtra(PAYMENT_ERROR_MESSAGE)
-                    Log.e("broadcastReceiver","Error message"+ error)
+                } else {
+                    val error = intent?.getStringExtra(PayOrcConstants.PAYMENT_ERROR_MESSAGE)
+                    Log.e("broadcastReceiver", "$error")
                 }
             }
         }
 
         LocalBroadcastManager.getInstance(this)
-            .registerReceiver(broadcastReceiver, IntentFilter(PAYMENT_RESULT))
+            .registerReceiver(broadcastReceiver, IntentFilter(PayOrcConstants.PAYMENT_RESULT_DATA))
 
         val data = request.jsonToGSON<PaymentRequest>()
 
-        Log.e("jsonToGSON",""+data)
+        Log.e("jsonToGSON", "" + data)
         binding.checkPayment.setOnClickListener {
             val intent = Intent(this, PayOrcPaymentActivity::class.java)
-            intent.putExtra(KEY_CREATE_ORDER,data)
+            intent.putExtra(PayOrcConstants.KEY_CREATE_ORDER, data)
             startActivity(intent)
         }
     }
@@ -66,7 +60,7 @@ class MainActivity : AppCompatActivity() {
             .unregisterReceiver(broadcastReceiver)
     }
 
-    val request ="""
+    private val request = """
         
     {
       "class": "ECOM",
