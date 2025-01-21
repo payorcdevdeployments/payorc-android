@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, PaymentFormActivity::class.java)
             startActivity(intent)
         }
-
+/*
         broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 val status = intent?.getBooleanExtra(PayOrcConstants.PAYMENT_RESULT_STATUS, false)
@@ -52,17 +52,17 @@ class MainActivity : AppCompatActivity() {
         val data = request.jsonToGSON<PaymentRequest>()
 
         Log.e("jsonToGSON", "" + data)
-        binding.checkPayment.setOnClickListener {
+      binding.checkPayment.setOnClickListener {
             val intent = Intent(this, PayOrcPaymentActivity::class.java)
             intent.putExtra(PayOrcConstants.KEY_CREATE_ORDER, data)
             startActivity(intent)
-        }
+        }*/
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        LocalBroadcastManager.getInstance(this)
-            .unregisterReceiver(broadcastReceiver)
+       /* LocalBroadcastManager.getInstance(this)
+            .unregisterReceiver(broadcastReceiver)*/
     }
 
     private val request = """

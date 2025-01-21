@@ -13,6 +13,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -52,7 +53,18 @@ class PayOrcPaymentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPayOrcPaymentBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Back is pressed... Finishing the activity
+                Log.e("onBackPressedDispatcher","Back pressed")
+                if(binding.close.isVisible) {
+                    binding.close.performClick()
+                }
+                else{
+                    binding.webView.goBack()
+                }
+            }
+        })
         val request = intent.parcelable<PaymentRequest>(PayOrcConstants.KEY_CREATE_ORDER)
         // Access MyRepository from Application class
         val myRepository = myRepository
@@ -128,6 +140,7 @@ class PayOrcPaymentActivity : AppCompatActivity() {
 
         // Add JavaScript Interface for communication
         binding.webView.addJavascriptInterface(WebAppInterface(), "AndroidBridge")
+
 
         // Set a WebViewClient to handle navigation
         binding.webView.webViewClient = object : WebViewClient() {
