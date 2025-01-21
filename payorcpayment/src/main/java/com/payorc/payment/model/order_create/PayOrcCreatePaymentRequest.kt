@@ -15,10 +15,10 @@ data class PaymentRequest(
     @SerializedName("billing_details") val billingDetails: BillingDetails? = null,
     @SerializedName("capture_method") val captureMethod: String? = null,
     @SerializedName("class") val classX: String? = null,
-    @SerializedName("custom_data") val customData: List<CustomData>? = null,
+    @SerializedName("custom_data") val customData: MutableList<CustomData>? = null,
     @SerializedName("customer_details") val customerDetails: CustomerDetails? = null,
     @SerializedName("order_details") val orderDetails: OrderDetails? = null,
-    @SerializedName("parameters") val parameters: List<Parameter>? = null,
+    @SerializedName("parameters") val parameters: MutableList<Parameter>? = null,
     @SerializedName("payment_token") val paymentToken: String? = null,
     @SerializedName("shipping_details") val shippingDetails: ShippingDetails? = null,
     @SerializedName("urls") val urls: Urls? = null
