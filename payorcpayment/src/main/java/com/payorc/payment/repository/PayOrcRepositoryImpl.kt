@@ -146,7 +146,7 @@ class PayOrcRepositoryImpl(private val apiService: PayOrcApiService, private val
         }
     }
 
-    override suspend fun checkPaymentStatus(orderId: String) {
+    override suspend fun checkPaymentStatus(pOrderId: String) {
         if (!context.isOnline()) {
             _uiState.update {
                 it.copy(
@@ -162,7 +162,7 @@ class PayOrcRepositoryImpl(private val apiService: PayOrcApiService, private val
         }
         withContext(Dispatchers.IO) {
             try {
-                val response = apiService.getPaymentDetails(orderId)
+                val response = apiService.getPaymentDetails(pOrderId)
                 if (response.isSuccessful) {
                     _uiState.update {
                         it.copy(

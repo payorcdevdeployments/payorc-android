@@ -13,7 +13,7 @@ interface PayOrcRepository {
 
     suspend fun createOrder(request: PayOrcCreatePaymentRequest)
 
-    suspend fun checkPaymentStatus(orderId: String)
+    suspend fun checkPaymentStatus(pOrderId: String)
 
     fun clearErrorMessage()
 
