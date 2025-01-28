@@ -68,7 +68,7 @@ class App : Application() {
 
 
 # Implementation
-Add the following lines to the your activity file:
+Step 1: Add the following lines to the your activity file:
 
 ```
 import com.payorc.payment.model.dto.PaymentActionType
@@ -139,7 +139,8 @@ class PaymentFormActivity : AppCompatActivity() {
 ```
 Payment response data should he handled in [PayOrcTransactionResponse.kt](./payorcpayment/src/main/java/com/payorc/payment/model/order_status/PayOrcTransactionResponse.kt)
 
-To start payment page from your activity with request ([PayOrcCreatePaymentRequest.kt](./payorcpayment/src/main/java/com/payorc/payment/model/order_create/PayOrcCreatePaymentRequest.kt)):
+
+Step 2: To start payment page from your activity with request ([PayOrcCreatePaymentRequest.kt](./payorcpayment/src/main/java/com/payorc/payment/model/order_create/PayOrcCreatePaymentRequest.kt)):
 
 ```
 import com.payorc.payment.ui.PayOrcPaymentActivity
@@ -149,3 +150,13 @@ val intent = Intent(this, PayOrcPaymentActivity::class.java)
         startActivity(intent)
 
 ```
+
+Sample Payment request:
+```
+val paymentRequest = PayOrcCreatePaymentRequest(
+
+)
+
+```
+
+
