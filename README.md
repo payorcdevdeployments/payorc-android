@@ -137,8 +137,9 @@ class PaymentFormActivity : AppCompatActivity() {
 }
 
 ```
+Payment response data should he handled in [PayOrcTransactionResponse.kt](./payorcpayment/src/main/java/com/payorc/payment/model/order_status/PayOrcTransactionResponse.kt)
 
-To start payment page from your activity with request:
+To start payment page from your activity with request ([PayOrcCreatePaymentRequest.kt](./payorcpayment/src/main/java/com/payorc/payment/model/order_create/PayOrcCreatePaymentRequest.kt)):
 
 ```
 import com.payorc.payment.ui.PayOrcPaymentActivity
