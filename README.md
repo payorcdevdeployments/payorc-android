@@ -22,7 +22,8 @@ Add the following lines to the `app/build.gradle` file:
 
 ```groovy
 dependencies {
-    implementation(name: 'sdk', ext: 'aar')
+    implementation files('libs/sdk.aar')
+
 }
 
 ```
