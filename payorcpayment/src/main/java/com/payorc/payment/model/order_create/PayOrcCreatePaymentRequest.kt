@@ -11,17 +11,17 @@ data class PayOrcCreatePaymentRequest(
 
 @Parcelize
 data class PaymentRequest(
-    @SerializedName("action") val action: String? = null,
-    @SerializedName("billing_details") val billingDetails: BillingDetails? = null,
-    @SerializedName("capture_method") val captureMethod: String? = null,
     @SerializedName("class") val classX: String? = null,
-    @SerializedName("custom_data") val customData: MutableList<CustomData>? = null,
-    @SerializedName("customer_details") val customerDetails: CustomerDetails? = null,
+    @SerializedName("action") val action: String? = null,
+    @SerializedName("capture_method") val captureMethod: String? = null,
     @SerializedName("order_details") val orderDetails: OrderDetails? = null,
-    @SerializedName("parameters") val parameters: MutableList<Parameter>? = null,
-    @SerializedName("payment_token") val paymentToken: String? = null,
+    @SerializedName("customer_details") val customerDetails: CustomerDetails? = null,
+    @SerializedName("billing_details") val billingDetails: BillingDetails? = null,
     @SerializedName("shipping_details") val shippingDetails: ShippingDetails? = null,
-    @SerializedName("urls") val urls: Urls? = null
+    @SerializedName("urls") val urls: Urls? = null,
+    @SerializedName("parameters") val parameters: MutableList<Parameter>? = null,
+    @SerializedName("custom_data") val customData: MutableList<CustomData>? = null,
+    @SerializedName("payment_token") val paymentToken: String? = null
 ) : Parcelable
 
 @Parcelize
@@ -29,9 +29,9 @@ data class BillingDetails(
     @SerializedName("address_line1") val addressLine1: String? = null,
     @SerializedName("address_line2") val addressLine2: String? = null,
     @SerializedName("city") val city: String? = null,
+    @SerializedName("province") val province: String? = null,
     @SerializedName("country") val country: String? = null,
-    @SerializedName("pin") val pin: String? = null,
-    @SerializedName("province") val province: String? = null
+    @SerializedName("pin") val pin: String? = null
 ) : Parcelable
 
 @Parcelize
@@ -45,21 +45,21 @@ data class CustomData(
 
 @Parcelize
 data class CustomerDetails(
-    @SerializedName("code") val code: String? = null,
-    @SerializedName("email") val email: String? = null,
     @SerializedName("m_customer_id") val mCustomerId: String? = null,
+    @SerializedName("name") val name: String? = null,
+    @SerializedName("email") val email: String? = null,
     @SerializedName("mobile") val mobile: String? = null,
-    @SerializedName("name") val name: String? = null
+    @SerializedName("code") val code: String? = null
 ) : Parcelable
 
 @Parcelize
 data class OrderDetails(
+    @SerializedName("m_order_id") val mOrderId: String? = null,
     @SerializedName("amount") val amount: String? = null,
     @SerializedName("convenience_fee") val convenienceFee: String? = null,
+    @SerializedName("quantity") val quantity: String? = null,
     @SerializedName("currency") val currency: String? = null,
-    @SerializedName("description") val description: String? = null,
-    @SerializedName("m_order_id") val mOrderId: String? = null,
-    @SerializedName("quantity") val quantity: String? = null
+    @SerializedName("description") val description: String? = null
 ) : Parcelable
 
 @Parcelize
