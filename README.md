@@ -65,6 +65,8 @@ class App : Application() {
         )
     }
 }
+
+env should be test / live
 ```
 
 
