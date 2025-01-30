@@ -208,4 +208,11 @@ val paymentRequest = PaymentRequest(
 
 ```
 
+Important:
+```
+
+Update SDK version every time in PayOrcConfig.versionName
+
+
+```
 
