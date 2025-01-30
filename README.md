@@ -22,7 +22,8 @@ Add the following lines to the `app/build.gradle` file:
 
 ```groovy
 dependencies {
-    implementation(name: 'sdk', ext: 'aar')
+    implementation files('libs/sdk.aar')
+
 }
 
 ```
@@ -68,7 +69,7 @@ class App : Application() {
 
 
 # Implementation
-Add the following lines to the your activity file:
+Step 1: Add the following lines to the your activity file:
 
 ```
 import com.payorc.payment.model.dto.PaymentActionType
@@ -137,14 +138,72 @@ class PaymentFormActivity : AppCompatActivity() {
 }
 
 ```
+Payment response data should he handled in [PayOrcTransactionResponse.kt](./payorcpayment/src/main/java/com/payorc/payment/model/order_status/PayOrcTransactionResponse.kt)
 
-To start payment page from your activity with request:
+
+Step 2: To start payment page from your activity with request ([PaymentRequest.kt](./payorcpayment/src/main/java/com/payorc/payment/model/order_create/PayOrcCreatePaymentRequest.kt)):
 
 ```
 import com.payorc.payment.ui.PayOrcPaymentActivity
 
 val intent = Intent(this, PayOrcPaymentActivity::class.java)
-        intent.putExtra(PayOrcConstants.KEY_CREATE_ORDER, paymentRequest)
-        startActivity(intent)
+intent.putExtra(PayOrcConstants.KEY_CREATE_ORDER, paymentRequest)
+startActivity(intent)
 
 ```
+
+Sample Payment request:
+```
+
+import com.payorc.payment.model.order_create.PaymentRequest
+
+val paymentRequest = PaymentRequest(
+            action = PaymentActionType.AUTH.displayName, // AUTH or SALE
+            billingDetails = BillingDetails(
+                addressLine1 = "address1",
+                addressLine2 = "address2",
+                city = "Amarpur",
+                country = "IN",
+                pin = "482008",
+                province = "Bihar"
+            ),
+            captureMethod = PaymentCaptureMethod.MANUAL.displayName, // MANUAL or AUTOMATIC
+            classX = PaymentClassType.ECOM.displayName,
+            customData = null,
+            customerDetails = CustomerDetails(
+                code = "971",
+                email = "pawan@ payorc.com",
+                mCustomerId = "123",
+                mobile = "987654321",
+                name = "John Doe"
+            ),
+            orderDetails = OrderDetails(
+                amount = "100",
+                convenienceFee = "0",
+                currency = "AED",
+                description = "Test",
+                mOrderId = "1234",
+                quantity = "2"
+            ),
+            parameters = null,
+            paymentToken = null,
+            shippingDetails = ShippingDetails(
+                addressLine1 = "address1",
+                addressLine2 = "address2",
+                city = "Jabalpur",
+                country = "IN",
+                locationPin = "https://location/somepoint",
+                pin = "482005",
+                province = "Madhya Pradesh",
+                shippingAmount = "10",
+                shippingCode = "91",
+                shippingCurrency = "AED",
+                shippingEmail = "",
+                shippingMobile = "9876543210",
+                shippingName = " Pawan Kushwaha"
+            ), urls = Urls(cancel = "", failure = "", success = "")
+        )
+
+```
+
+
