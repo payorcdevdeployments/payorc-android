@@ -29,6 +29,7 @@ import com.payorc.payment.repository.PayOrcRepositoryImpl
 import com.payorc.payment.service.PayOrcRetrofitInstance
 import com.payorc.payment.utils.PayOrcConstants
 import com.payorc.payment.utils.parcelable
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -81,6 +82,12 @@ class PayOrcPaymentActivity : AppCompatActivity() {
 
                 binding.progressBar.isVisible = uiState.isLoading
                 binding.close.isVisible = uiState.orderStatusSuccess
+
+                if (uiState.orderStatusSuccess) {
+                    delay(5000)
+                    if (!isDestroyed)
+                        binding.close.performClick()
+                }
 
                 uiState.errorToastMessage?.let { message ->
                     showToast(message)
