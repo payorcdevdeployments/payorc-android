@@ -1,5 +1,7 @@
 package com.payorc.payment.service
 
+import android.os.Build
+import com.payorc.payment.BuildConfig
 import com.payorc.payment.config.PayOrcConfig
 import com.payorc.payment.model.keys_secret.PayOrcKeySecretRequest
 import com.payorc.payment.model.keys_secret.PayOrcKeySecretResponse
@@ -24,6 +26,11 @@ interface PayOrcApiService {
         @Header("merchant-key") merchantKey: String = PayOrcConfig.getInstance().merchantKey ?: "",
         @Header("merchant-secret") merchantSecret: String = PayOrcConfig.getInstance().merchantSecret
             ?: "",
+        @Header("sdk") sdk: String = "android",
+        @Header("sdk-version") sdkVersion: String = PayOrcConfig.getInstance().versionName,
+        @Header("device-brand") brand: String = Build.MANUFACTURER,
+        @Header("device-model") model: String = Build.MODEL,
+        @Header("device-os-version") version: String = Build.VERSION.CODENAME,
         @Body request: PayOrcCreatePaymentRequest
     ): Response<PayOrcCreatePaymentResponse>
 

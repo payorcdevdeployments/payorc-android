@@ -4,7 +4,7 @@ import com.google.gson.Gson
 
 object PayOrcApiContent {
     const val KEYS_SECRET = "api/v1/check/keys-secret"
-    const val CREATE_ORDER = "api/v1/open/orders/create"
+    const val CREATE_ORDER = "api/v1/sdk/orders/create"
     const val TRANSACTION_DETAILS = "api/v1/open/orders/transaction-details"
 }
 
