@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
+    id("maven-publish")        // << --- ADD This
 }
 
 android {
@@ -22,6 +23,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            consumerProguardFiles("proguard-rules.pro")
+            consumerProguardFiles("consumer-rules.pro")      // << --- ADD This
         }
     }
     compileOptions {
@@ -65,3 +68,21 @@ dependencies {
     implementation(libs.converter.gson)
 //    implementation(libs.logging.interceptor)
 }
+
+// 5. Publishing:
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.github.esaiamuthan"
+            artifactId = "pay-orc-android"
+            version = "1.0.0"
+            pom {
+                description.set("first release")
+            }
+        }
+    }
+    repositories {
+        mavenLocal() // << --- ADD This
+    }
+}
+
