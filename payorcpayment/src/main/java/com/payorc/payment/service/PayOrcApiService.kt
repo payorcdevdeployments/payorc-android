@@ -30,7 +30,7 @@ interface PayOrcApiService {
         @Header("sdk-version") sdkVersion: String = PayOrcConfig.getInstance().versionName,
         @Header("device-brand") brand: String = Build.MANUFACTURER,
         @Header("device-model") model: String = Build.MODEL,
-        @Header("device-os-version") version: String = Build.VERSION.CODENAME,
+        @Header("device-os-version") version: String = Build.VERSION.RELEASE,
         @Body request: PayOrcCreatePaymentRequest
     ): Response<PayOrcCreatePaymentResponse>
 
