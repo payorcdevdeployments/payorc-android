@@ -75,9 +75,9 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "com.github.esaiamuthan"
             artifactId = "pay-orc-android"
-            version = "1.0.0"
+            version = "1.0.3"
             pom {
-                description.set("first release")
+                description.set("new release")
             }
         }
     }
