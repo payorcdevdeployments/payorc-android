@@ -5,6 +5,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
@@ -12,12 +14,16 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.payorc.payment.R
 import com.payorc.payment.config.PayOrcConfig
 import com.payorc.payment.databinding.ActivityPayOrcPaymentBinding
 import com.payorc.payment.model.keys_secret.PayOrcKeySecretRequest
@@ -27,6 +33,7 @@ import com.payorc.payment.model.order_create.PaymentRequest
 import com.payorc.payment.repository.PayOrcRepository
 import com.payorc.payment.repository.PayOrcRepositoryImpl
 import com.payorc.payment.service.PayOrcRetrofitInstance
+import com.payorc.payment.utils.GIFView
 import com.payorc.payment.utils.PayOrcConstants
 import com.payorc.payment.utils.parcelable
 import kotlinx.coroutines.delay
@@ -37,7 +44,6 @@ class PayOrcPaymentActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPayOrcPaymentBinding
 
-
     private val retrofitInstance: PayOrcRetrofitInstance by lazy {
         PayOrcRetrofitInstance
     }
@@ -47,10 +53,31 @@ class PayOrcPaymentActivity : AppCompatActivity() {
         PayOrcRepositoryImpl(retrofitInstance.apiService, this)
     }
 
+    /// to manage the gif view loader
+    private var gifView: GIFView? = null
+
+    private fun initLoader() {
+        gifView = GIFView(this, R.raw.loader).apply {
+            id = View.generateViewId()  // Generate a unique ID
+            val layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams.gravity = Gravity.CENTER
+            setLayoutParams(layoutParams)
+        }
+
+        // Add the view to ConstraintLayout FIRST
+        binding.main.addView(gifView)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPayOrcPaymentBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        initLoader()
+
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 // Back is pressed... Finishing the activity
@@ -66,13 +93,11 @@ class PayOrcPaymentActivity : AppCompatActivity() {
         // Access MyRepository from Application class
         val myRepository = myRepository
 
-
         binding.close.setOnClickListener {
             val intent = Intent(PayOrcConstants.PAY_ORC_PAYMENT_RESULT)
             intent.putExtra(PayOrcConstants.PAYMENT_RESULT_STATUS, true)
             intent.putExtra(
-                PayOrcConstants.PAYMENT_RESULT_DATA,
-                myRepository.uiState.value.transaction
+                PayOrcConstants.PAYMENT_RESULT_DATA, myRepository.uiState.value.transaction
             )
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
             finish() // Close the activity
@@ -80,13 +105,12 @@ class PayOrcPaymentActivity : AppCompatActivity() {
         lifecycleScope.launch {
             myRepository.uiState.collect { uiState ->
 
-                binding.progressBar.isVisible = uiState.isLoading
+                gifView?.isVisible = uiState.isLoading
                 binding.close.isVisible = uiState.orderStatusSuccess
 
                 if (uiState.orderStatusSuccess) {
                     delay(5000)
-                    if (!isDestroyed)
-                        binding.close.performClick()
+                    if (!isDestroyed) binding.close.performClick()
                 }
 
                 uiState.errorToastMessage?.let { message ->
@@ -162,22 +186,20 @@ class PayOrcPaymentActivity : AppCompatActivity() {
             }
 
             override fun onReceivedError(
-                view: WebView?,
-                request: WebResourceRequest?,
-                error: WebResourceError?
+                view: WebView?, request: WebResourceRequest?, error: WebResourceError?
             ) {
                 // Display an error message or custom UI
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
-                binding.progressBar.isVisible = true
+                gifView?.isVisible = true
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 Log.e("WebView", "url $url")
-                binding.progressBar.isVisible = false
+                gifView?.isVisible = false
                 // Inject JavaScript after the page loads
                 injectJavaScript()
             }

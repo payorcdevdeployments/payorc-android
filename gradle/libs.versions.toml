@@ -9,7 +9,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.10.0"
 constraintlayout = "2.2.0"
-payOrcAndroid = "1.0.2"
+payOrcAndroid = "1.0.4"
 retrofit = "2.11.0"
 loggingInterceptor = "5.0.0-alpha.12"
 

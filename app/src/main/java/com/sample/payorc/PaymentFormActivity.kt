@@ -18,6 +18,7 @@ import com.payorc.payment.model.dto.PaymentActionType
 import com.payorc.payment.model.dto.PaymentCaptureMethod
 import com.payorc.payment.model.dto.PaymentClassType
 import com.payorc.payment.model.order_create.BillingDetails
+import com.payorc.payment.model.order_create.CustomData
 import com.payorc.payment.model.order_create.CustomerDetails
 import com.payorc.payment.model.order_create.OrderDetails
 import com.payorc.payment.model.order_create.Parameter
@@ -50,7 +51,11 @@ class PaymentFormActivity : AppCompatActivity() {
                     val data =
                         intent.parcelable<PayOrcTransaction>(PayOrcConstants.PAYMENT_RESULT_DATA)
                     Log.e("broadcastReceiver", "" + data)
-                    Toast.makeText(this@PaymentFormActivity, "Payment Success Completed", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        this@PaymentFormActivity,
+                        "Payment Success Completed",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     finish()
 
@@ -63,7 +68,10 @@ class PaymentFormActivity : AppCompatActivity() {
         }
 
         LocalBroadcastManager.getInstance(this)
-            .registerReceiver(broadcastReceiver, IntentFilter(PayOrcConstants.PAY_ORC_PAYMENT_RESULT))
+            .registerReceiver(
+                broadcastReceiver,
+                IntentFilter(PayOrcConstants.PAY_ORC_PAYMENT_RESULT)
+            )
 
         binding.btnSubmit.setOnClickListener {
             if (binding.spinnerClassName.selectedItemPosition == 0) {
@@ -97,7 +105,7 @@ class PaymentFormActivity : AppCompatActivity() {
             captureMethod = PaymentCaptureMethod.entries[binding.spinnerCaptureMethod.selectedItemPosition].displayName,
 
             // order details
-            orderDetails= OrderDetails(
+            orderDetails = OrderDetails(
                 amount = binding.etAmount.text.toString(),
                 currency = binding.etCurrency.text.toString(),
                 description = binding.etDescription.text.toString(),
@@ -140,85 +148,38 @@ class PaymentFormActivity : AppCompatActivity() {
                 failure = binding.etFailureUrl.text.toString(),
                 cancel = binding.etCancelUrl.text.toString()
             ),
+            parameters = mutableListOf<Parameter>().apply {
+                add(Parameter(alpha = binding.etParameterAlpha.text.toString()))
+                add(Parameter(beta = binding.etParameterBeta.text.toString()))
+                add(Parameter(gamma = binding.etParameterGamma.text.toString()))
+                add(Parameter(delta = binding.etParameterDelta.text.toString()))
+                add(Parameter(epsilon = binding.etParameterEpsilon.text.toString()))
+            },
+            customData = mutableListOf<CustomData>().apply {
+                add(CustomData(alpha = binding.etCustomDataAlpha.text.toString()))
+                add(CustomData(beta = binding.etCustomDataBeta.text.toString()))
+                add(CustomData(gamma = binding.etCustomDataGamma.text.toString()))
+                add(CustomData(delta = binding.etCustomDataEpsilon.text.toString()))
+                add(CustomData(epsilon = binding.etCustomDataEpsilon.text.toString()))
+            }
         )
-        if (binding.etParameterAlpha.text.toString().isNotEmpty()){
-            paymentRequest.parameters?.add(Parameter(
-                alpha = binding.etParameterAlpha.text.toString()
-            ))
-        }
-        if (binding.etParameterBeta.text.toString().isNotEmpty()){
-            paymentRequest.parameters?.add(Parameter(
-                beta = binding.etParameterBeta.text.toString()
-            ))
-        }
-        if (binding.etParameterGamma.text.toString().isNotEmpty()){
-            paymentRequest.parameters?.add(Parameter(
-                gamma = binding.etParameterGamma.text.toString()
-            ))
-        }
-        if (binding.etParameterDelta.text.toString().isNotEmpty()){
-            paymentRequest.parameters?.add(Parameter(
-                delta = binding.etParameterDelta.text.toString()
-            ))
-        }
-        if (binding.etParameterEpsilon.text.toString().isNotEmpty()){
-            paymentRequest.parameters?.add(Parameter(
-                epsilon = binding.etParameterEpsilon.text.toString()
-            ))
-        }
-        if (binding.etCustomDataAlpha.text.toString().isNotEmpty()){
-            paymentRequest.customData?.add(com.payorc.payment.model.order_create.CustomData(
-                alpha = binding.etCustomDataAlpha.text.toString()
-            ))
-        }
-        if (binding.etCustomDataBeta.text.toString().isNotEmpty()) {
-            paymentRequest.customData?.add(
-                com.payorc.payment.model.order_create.CustomData(
-                    beta = binding.etCustomDataBeta.text.toString()
-                )
-            )
-        }
-        if (binding.etCustomDataGamma.text.toString().isNotEmpty()) {
-            paymentRequest.customData?.add(
-                com.payorc.payment.model.order_create.CustomData(
-                    gamma = binding.etCustomDataGamma.text.toString()
-                )
-            )
-        }
-        if (binding.etCustomDataDelta.text.toString().isNotEmpty()) {
-            paymentRequest.customData?.add(
-                com.payorc.payment.model.order_create.CustomData(
-                    delta = binding.etCustomDataDelta.text.toString()
-                )
-            )
-        }
-        if (binding.etCustomDataEpsilon.text.toString().isNotEmpty()) {
-            paymentRequest.customData?.add(
-                com.payorc.payment.model.order_create.CustomData(
-                    epsilon = binding.etCustomDataEpsilon.text.toString()
-                )
-            )
-        }
-
         val intent = Intent(this, PayOrcPaymentActivity::class.java)
         intent.putExtra(PayOrcConstants.KEY_CREATE_ORDER, paymentRequest)
         startActivity(intent)
-
     }
 
     private fun showError(errorMessage: String) {
         // Display the error message to the user
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
-
     }
 
     private fun initToolBar() {
         setSupportActionBar(binding.toolbar)
-
         // Enable the back arrow
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_24) // Use your back arrow drawable
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -231,12 +192,14 @@ class PaymentFormActivity : AppCompatActivity() {
                 finish()
                 true
             }
+
             R.id.action_prefill -> {
                 // Handle "Prefill" action
                 // Add your prefill logic here
                 setPrefillData()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -249,13 +212,13 @@ class PaymentFormActivity : AppCompatActivity() {
         binding.etOrderId.setText("1234")
         binding.etAmount.setText("100")
         binding.etCurrency.setText("AED")
-        binding.etDescription.setText("Test")
+        binding.etDescription.setText("Sample request description")
         binding.etQuantity.setText("2")
-        binding.etConvenienceFee.setText("0")
+        binding.etConvenienceFee.setText("5")
         // customer details
         binding.etCustomerId.setText("123")
         binding.etCustomerName.setText("John Doe")
-        binding.etCustomerEmail.setText("pawan@payorc.com")
+        binding.etCustomerEmail.setText("johndoe@example.com")
         binding.etCustomerMobile.setText("987654321")
         binding.etCustomerCode.setText("971")
         // billing details
@@ -284,19 +247,18 @@ class PaymentFormActivity : AppCompatActivity() {
         binding.etFailureUrl.setText("")
         binding.etCancelUrl.setText("")
         // parameters
-        binding.etParameterAlpha.setText("")
-        binding.etParameterBeta.setText("")
-        binding.etParameterGamma.setText("")
-        binding.etParameterDelta.setText("")
-        binding.etParameterEpsilon.setText("")
+        binding.etParameterAlpha.setText("alpha")
+        binding.etParameterBeta.setText("beta")
+        binding.etParameterGamma.setText("gamma")
+        binding.etParameterDelta.setText("delta")
+        binding.etParameterEpsilon.setText("epsilon")
 
         // custom data
-        binding.etCustomDataAlpha.setText("")
-        binding.etCustomDataBeta.setText("")
-        binding.etCustomDataGamma.setText("")
-        binding.etCustomDataDelta.setText("")
-        binding.etCustomDataEpsilon.setText("")
-
+        binding.etCustomDataAlpha.setText("alpha")
+        binding.etCustomDataBeta.setText("beta")
+        binding.etCustomDataGamma.setText("gamma")
+        binding.etCustomDataDelta.setText("delta")
+        binding.etCustomDataEpsilon.setText("epsilon")
     }
 
     private fun initSpinner() {
@@ -312,7 +274,12 @@ class PaymentFormActivity : AppCompatActivity() {
         binding.spinnerClassName.apply {
             adapter = enumPaymentClassTypeAdapter
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
                     // Get the selected enum value
                     val selectedEnum = PaymentClassType.entries[position]
 
@@ -336,7 +303,12 @@ class PaymentFormActivity : AppCompatActivity() {
         binding.spinnerAction.apply {
             adapter = enumActionAdapter
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
                     // Get the selected enum value
                     val selectedEnum = PaymentActionType.entries[position]
 
@@ -360,7 +332,12 @@ class PaymentFormActivity : AppCompatActivity() {
         binding.spinnerCaptureMethod.apply {
             adapter = enumCaptureMethodAdapter
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
                     // Get the selected enum value
                     val selectedEnum = PaymentCaptureMethod.entries[position]
                     setSpinnerValue(selectedEnum)
@@ -391,6 +368,4 @@ class PaymentFormActivity : AppCompatActivity() {
             }
         }
     }
-
-
 }

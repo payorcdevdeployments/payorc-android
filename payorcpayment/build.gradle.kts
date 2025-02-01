@@ -72,9 +72,9 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "com.github.esaiamuthan"
             artifactId = "pay-orc-android"
-            version = "1.0.4"
+            version = "1.0.5"
             pom {
-                description.set("new release")
+                description.set("added gif loader")
             }
         }
     }
