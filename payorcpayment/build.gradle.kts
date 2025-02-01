@@ -54,6 +54,19 @@ android {
     }
 }
 
+// 4. Add This Java Blocs:
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)        // << --- ADD This
+    }
+}
+
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17            // << --- ADD This
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
