@@ -21,4 +21,19 @@
         android:src="@drawable/close_icon"
         android:visibility="gone"
         tools:visibility="visible" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/timer"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|start"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_timer"
+        android:contentDescription="@null"
+        android:gravity="center"
+        android:text="@string/seconds_10"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </FrameLayout>

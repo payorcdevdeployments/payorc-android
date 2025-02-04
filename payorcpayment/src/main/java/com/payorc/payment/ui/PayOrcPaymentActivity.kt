@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -18,8 +19,6 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -55,6 +54,7 @@ class PayOrcPaymentActivity : AppCompatActivity() {
 
     /// to manage the gif view loader
     private var gifView: GIFView? = null
+    private var countDownTimer: CountDownTimer? = null
 
     private fun initLoader() {
         gifView = GIFView(this, R.raw.loader).apply {
@@ -107,10 +107,11 @@ class PayOrcPaymentActivity : AppCompatActivity() {
 
                 gifView?.isVisible = uiState.isLoading
                 binding.close.isVisible = uiState.orderStatusSuccess
+                binding.timer.isVisible = uiState.orderStatusSuccess
 
                 if (uiState.orderStatusSuccess) {
-                    delay(5000)
-                    if (!isDestroyed) binding.close.performClick()
+                    delay(2000)
+                    startCountdown()
                 }
 
                 uiState.errorToastMessage?.let { message ->
@@ -140,6 +141,36 @@ class PayOrcPaymentActivity : AppCompatActivity() {
             }
         }
         initApi()
+    }
+
+    override fun onDestroy() {
+        countDownTimer?.cancel()
+        super.onDestroy()
+    }
+
+    private fun startCountdown() {
+        countDownTimer?.cancel() // Cancel any existing countdown
+        countDownTimer = object : CountDownTimer(10_000, 1_000) { // 10 seconds countdown
+            override fun onTick(millisUntilFinished: Long) {
+                val secondsRemaining = millisUntilFinished / 1000
+                if (secondsRemaining < 10)
+                    binding.timer.text = buildString {
+                        append("0")
+                        append(secondsRemaining)
+                    }
+                else
+                    binding.timer.text = "$secondsRemaining"
+            }
+
+            override fun onFinish() {
+                binding.timer.text = buildString {
+                    append("00")
+                } // Ensure it shows "00" at the end
+
+                countDownTimer?.cancel()
+                if (!isDestroyed) binding.close.performClick()
+            }
+        }.start()
     }
 
     private fun initApi() {
