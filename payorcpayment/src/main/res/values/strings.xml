@@ -1,3 +1,3 @@
 <resources>
-    <string name="seconds_10">10</string>
+    <string name="seconds_10">You will be redirected to the Merchant site in %s seconds.</string>
 </resources>

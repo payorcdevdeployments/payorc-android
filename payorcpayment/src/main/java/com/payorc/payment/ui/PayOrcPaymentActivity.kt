@@ -107,11 +107,10 @@ class PayOrcPaymentActivity : AppCompatActivity() {
 
                 gifView?.isVisible = uiState.isLoading
                 binding.close.isVisible = uiState.orderStatusSuccess
-                binding.timer.isVisible = uiState.orderStatusSuccess
 
                 if (uiState.orderStatusSuccess) {
                     delay(2000)
-                    startCountdown()
+                    startCountdown(true)
                 }
 
                 uiState.errorToastMessage?.let { message ->
@@ -148,25 +147,17 @@ class PayOrcPaymentActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun startCountdown() {
+    private fun startCountdown(orderStatusSuccess: Boolean) {
         countDownTimer?.cancel() // Cancel any existing countdown
-        countDownTimer = object : CountDownTimer(10_000, 1_000) { // 10 seconds countdown
+        binding.timer.isVisible = orderStatusSuccess
+        countDownTimer = object : CountDownTimer(6_000, 1_000) { // 10 seconds countdown
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = millisUntilFinished / 1000
-                if (secondsRemaining < 10)
-                    binding.timer.text = buildString {
-                        append("0")
-                        append(secondsRemaining)
-                    }
-                else
-                    binding.timer.text = "$secondsRemaining"
+                binding.timer.text = getString(R.string.seconds_10, secondsRemaining.toString())
             }
 
             override fun onFinish() {
-                binding.timer.text = buildString {
-                    append("00")
-                } // Ensure it shows "00" at the end
-
+                binding.timer.text = getString(R.string.seconds_10, '0')
                 countDownTimer?.cancel()
                 if (!isDestroyed) binding.close.performClick()
             }
