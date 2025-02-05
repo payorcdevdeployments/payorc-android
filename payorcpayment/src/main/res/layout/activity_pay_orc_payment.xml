@@ -22,17 +22,37 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/timer"
+    <LinearLayout
+        android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="#40000000"
-        android:contentDescription="@null"
-        android:gravity="center"
+        android:orientation="vertical"
         android:padding="16dp"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/timer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/redirect_button"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_button"
+            android:gravity="center"
+            android:paddingHorizontal="24dp"
+            android:text="@string/redirect_now"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
 </FrameLayout>

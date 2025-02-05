@@ -10,6 +10,7 @@ import android.graphics.Movie
 import android.graphics.drawable.AnimatedImageDrawable
 import android.os.Build
 import android.os.SystemClock
+import android.util.Log
 import android.view.View
 
 @SuppressLint("ViewConstructor")
@@ -18,12 +19,16 @@ class GIFView(context: Context, resId: Int) : View(context) {
     private var gifMovie: Movie? = null
     private var movieStart: Long = 0
 
-    private var fixedWidth = 64
-    private var fixedHeight = 64
+    private var fixedWidth = 48
+    private var fixedHeight = 48
 
     init {
-        fixedWidth = (context.resources.displayMetrics.widthPixels * 0.2).toInt()
-        fixedHeight = (context.resources.displayMetrics.widthPixels * 0.2).toInt()
+        fixedWidth = (context.resources.displayMetrics.widthPixels * 0.15).toInt()
+        fixedHeight = (context.resources.displayMetrics.widthPixels * 0.15).toInt()
+
+        Log.e("fixedWidth", "" + fixedWidth)
+        Log.e("fixedHeight", "" + fixedHeight)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             // Use ImageDecoder for API 28+
             val source = ImageDecoder.createSource(context.resources, resId)

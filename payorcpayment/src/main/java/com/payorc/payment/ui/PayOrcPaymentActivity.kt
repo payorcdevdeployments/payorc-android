@@ -60,8 +60,7 @@ class PayOrcPaymentActivity : AppCompatActivity() {
         gifView = GIFView(this, R.raw.loader).apply {
             id = View.generateViewId()  // Generate a unique ID
             val layoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT
+                FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT
             )
             layoutParams.gravity = Gravity.CENTER
             setLayoutParams(layoutParams)
@@ -102,6 +101,16 @@ class PayOrcPaymentActivity : AppCompatActivity() {
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
             finish() // Close the activity
         }
+
+        binding.redirectButton.setOnClickListener {
+            val intent = Intent(PayOrcConstants.PAY_ORC_PAYMENT_RESULT)
+            intent.putExtra(PayOrcConstants.PAYMENT_RESULT_STATUS, true)
+            intent.putExtra(
+                PayOrcConstants.PAYMENT_RESULT_DATA, myRepository.uiState.value.transaction
+            )
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+            finish() // Close the activity
+        }
         lifecycleScope.launch {
             myRepository.uiState.collect { uiState ->
 
@@ -110,7 +119,7 @@ class PayOrcPaymentActivity : AppCompatActivity() {
 
                 if (uiState.orderStatusSuccess) {
                     delay(2000)
-                    startCountdown(true)
+                    startCountdown()
                 }
 
                 uiState.errorToastMessage?.let { message ->
@@ -147,9 +156,10 @@ class PayOrcPaymentActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun startCountdown(orderStatusSuccess: Boolean) {
+    private fun startCountdown() {
         countDownTimer?.cancel() // Cancel any existing countdown
-        binding.timer.isVisible = orderStatusSuccess
+        binding.bottomLayout.isVisible = true
+        binding.timer.text = getString(R.string.seconds_10, "5")
         countDownTimer = object : CountDownTimer(6_000, 1_000) { // 10 seconds countdown
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = millisUntilFinished / 1000
@@ -157,7 +167,6 @@ class PayOrcPaymentActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                binding.timer.text = getString(R.string.seconds_10, '0')
                 countDownTimer?.cancel()
                 if (!isDestroyed) binding.close.performClick()
             }

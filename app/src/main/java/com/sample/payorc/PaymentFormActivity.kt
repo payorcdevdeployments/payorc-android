@@ -51,14 +51,7 @@ class PaymentFormActivity : AppCompatActivity() {
                     val data =
                         intent.parcelable<PayOrcTransaction>(PayOrcConstants.PAYMENT_RESULT_DATA)
                     Log.e("broadcastReceiver", "" + data)
-                    Toast.makeText(
-                        this@PaymentFormActivity,
-                        "Payment Success Completed",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
                     finish()
-
                 } else {
                     val error = intent?.getStringExtra(PayOrcConstants.PAYMENT_ERROR_MESSAGE)
                     Log.e("broadcastReceiver", "$error")
@@ -67,11 +60,9 @@ class PaymentFormActivity : AppCompatActivity() {
             }
         }
 
-        LocalBroadcastManager.getInstance(this)
-            .registerReceiver(
-                broadcastReceiver,
-                IntentFilter(PayOrcConstants.PAY_ORC_PAYMENT_RESULT)
-            )
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            broadcastReceiver, IntentFilter(PayOrcConstants.PAY_ORC_PAYMENT_RESULT)
+        )
 
         binding.btnSubmit.setOnClickListener {
             if (binding.spinnerClassName.selectedItemPosition == 0) {
@@ -94,75 +85,73 @@ class PaymentFormActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        LocalBroadcastManager.getInstance(this)
-            .unregisterReceiver(broadcastReceiver)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
     }
 
     private fun submitForm() {
-        val paymentRequest = PaymentRequest(
-            classX = PaymentClassType.entries[binding.spinnerClassName.selectedItemPosition].displayName,
-            action = PaymentActionType.entries[binding.spinnerAction.selectedItemPosition].displayName,
-            captureMethod = PaymentCaptureMethod.entries[binding.spinnerCaptureMethod.selectedItemPosition].displayName,
+        val paymentRequest =
+            PaymentRequest(classX = PaymentClassType.entries[binding.spinnerClassName.selectedItemPosition].displayName,
+                action = PaymentActionType.entries[binding.spinnerAction.selectedItemPosition].displayName,
+                captureMethod = PaymentCaptureMethod.entries[binding.spinnerCaptureMethod.selectedItemPosition].displayName,
 
-            // order details
-            orderDetails = OrderDetails(
-                amount = binding.etAmount.text.toString(),
-                currency = binding.etCurrency.text.toString(),
-                description = binding.etDescription.text.toString(),
-                quantity = binding.etQuantity.text.toString(),
-                convenienceFee = binding.etConvenienceFee.text.toString(),
-                mOrderId = binding.etOrderId.text.toString()
-            ),
-            customerDetails = CustomerDetails(
-                name = binding.etCustomerName.text.toString(),
-                email = binding.etCustomerEmail.text.toString(),
-                mobile = binding.etCustomerMobile.text.toString(),
-                code = binding.etCustomerCode.text.toString(),
-                mCustomerId = binding.etCustomerId.text.toString()
-            ),
-            billingDetails = BillingDetails(
-                addressLine1 = binding.etBillingAddressLine1.text.toString(),
-                addressLine2 = binding.etBillingAddressLine2.text.toString(),
-                city = binding.etBillingCity.text.toString(),
-                country = binding.etBillingCountry.text.toString(),
-                pin = binding.etBillingPin.text.toString(),
-                province = binding.etBillingProvince.text.toString()
-            ),
-            shippingDetails = ShippingDetails(
-                shippingName = binding.etShippingName.text.toString(),
-                shippingEmail = binding.etShippingEmail.text.toString(),
-                shippingMobile = binding.etShippingMobile.text.toString(),
-                shippingAmount = binding.etShippingAmount.text.toString(),
-                shippingCurrency = binding.etShippingCurrency.text.toString(),
-                shippingCode = binding.etShippingCode.text.toString(),
-                addressLine1 = binding.etShippingAddressLine1.text.toString(),
-                addressLine2 = binding.etShippingAddressLine2.text.toString(),
-                city = binding.etShippingCity.text.toString(),
-                country = binding.etShippingCountry.text.toString(),
-                pin = binding.etShippingPin.text.toString(),
-                locationPin = binding.etLocationPin.text.toString(),
-                province = binding.etShippingProvince.text.toString()
-            ),
-            urls = Urls(
-                success = binding.etSuccessUrl.text.toString(),
-                failure = binding.etFailureUrl.text.toString(),
-                cancel = binding.etCancelUrl.text.toString()
-            ),
-            parameters = mutableListOf<Parameter>().apply {
-                add(Parameter(alpha = binding.etParameterAlpha.text.toString()))
-                add(Parameter(beta = binding.etParameterBeta.text.toString()))
-                add(Parameter(gamma = binding.etParameterGamma.text.toString()))
-                add(Parameter(delta = binding.etParameterDelta.text.toString()))
-                add(Parameter(epsilon = binding.etParameterEpsilon.text.toString()))
-            },
-            customData = mutableListOf<CustomData>().apply {
-                add(CustomData(alpha = binding.etCustomDataAlpha.text.toString()))
-                add(CustomData(beta = binding.etCustomDataBeta.text.toString()))
-                add(CustomData(gamma = binding.etCustomDataGamma.text.toString()))
-                add(CustomData(delta = binding.etCustomDataEpsilon.text.toString()))
-                add(CustomData(epsilon = binding.etCustomDataEpsilon.text.toString()))
-            }
-        )
+                // order details
+                orderDetails = OrderDetails(
+                    amount = binding.etAmount.text.toString(),
+                    currency = binding.etCurrency.text.toString(),
+                    description = binding.etDescription.text.toString(),
+                    quantity = binding.etQuantity.text.toString(),
+                    convenienceFee = binding.etConvenienceFee.text.toString(),
+                    mOrderId = binding.etOrderId.text.toString()
+                ),
+                customerDetails = CustomerDetails(
+                    name = binding.etCustomerName.text.toString(),
+                    email = binding.etCustomerEmail.text.toString(),
+                    mobile = binding.etCustomerMobile.text.toString(),
+                    code = binding.etCustomerCode.text.toString(),
+                    mCustomerId = binding.etCustomerId.text.toString()
+                ),
+                billingDetails = BillingDetails(
+                    addressLine1 = binding.etBillingAddressLine1.text.toString(),
+                    addressLine2 = binding.etBillingAddressLine2.text.toString(),
+                    city = binding.etBillingCity.text.toString(),
+                    country = binding.etBillingCountry.text.toString(),
+                    pin = binding.etBillingPin.text.toString(),
+                    province = binding.etBillingProvince.text.toString()
+                ),
+                shippingDetails = ShippingDetails(
+                    shippingName = binding.etShippingName.text.toString(),
+                    shippingEmail = binding.etShippingEmail.text.toString(),
+                    shippingMobile = binding.etShippingMobile.text.toString(),
+                    shippingAmount = binding.etShippingAmount.text.toString(),
+                    shippingCurrency = binding.etShippingCurrency.text.toString(),
+                    shippingCode = binding.etShippingCode.text.toString(),
+                    addressLine1 = binding.etShippingAddressLine1.text.toString(),
+                    addressLine2 = binding.etShippingAddressLine2.text.toString(),
+                    city = binding.etShippingCity.text.toString(),
+                    country = binding.etShippingCountry.text.toString(),
+                    pin = binding.etShippingPin.text.toString(),
+                    locationPin = binding.etLocationPin.text.toString(),
+                    province = binding.etShippingProvince.text.toString()
+                ),
+                urls = Urls(
+                    success = binding.etSuccessUrl.text.toString(),
+                    failure = binding.etFailureUrl.text.toString(),
+                    cancel = binding.etCancelUrl.text.toString()
+                ),
+                parameters = mutableListOf<Parameter>().apply {
+                    add(Parameter(alpha = binding.etParameterAlpha.text.toString()))
+                    add(Parameter(beta = binding.etParameterBeta.text.toString()))
+                    add(Parameter(gamma = binding.etParameterGamma.text.toString()))
+                    add(Parameter(delta = binding.etParameterDelta.text.toString()))
+                    add(Parameter(epsilon = binding.etParameterEpsilon.text.toString()))
+                },
+                customData = mutableListOf<CustomData>().apply {
+                    add(CustomData(alpha = binding.etCustomDataAlpha.text.toString()))
+                    add(CustomData(beta = binding.etCustomDataBeta.text.toString()))
+                    add(CustomData(gamma = binding.etCustomDataGamma.text.toString()))
+                    add(CustomData(delta = binding.etCustomDataEpsilon.text.toString()))
+                    add(CustomData(epsilon = binding.etCustomDataEpsilon.text.toString()))
+                })
         val intent = Intent(this, PayOrcPaymentActivity::class.java)
         intent.putExtra(PayOrcConstants.KEY_CREATE_ORDER, paymentRequest)
         startActivity(intent)
@@ -275,10 +264,7 @@ class PaymentFormActivity : AppCompatActivity() {
             adapter = enumPaymentClassTypeAdapter
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
+                    parent: AdapterView<*>, view: View?, position: Int, id: Long
                 ) {
                     // Get the selected enum value
                     val selectedEnum = PaymentClassType.entries[position]
@@ -304,10 +290,7 @@ class PaymentFormActivity : AppCompatActivity() {
             adapter = enumActionAdapter
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
+                    parent: AdapterView<*>, view: View?, position: Int, id: Long
                 ) {
                     // Get the selected enum value
                     val selectedEnum = PaymentActionType.entries[position]
@@ -333,10 +316,7 @@ class PaymentFormActivity : AppCompatActivity() {
             adapter = enumCaptureMethodAdapter
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
+                    parent: AdapterView<*>, view: View?, position: Int, id: Long
                 ) {
                     // Get the selected enum value
                     val selectedEnum = PaymentCaptureMethod.entries[position]
