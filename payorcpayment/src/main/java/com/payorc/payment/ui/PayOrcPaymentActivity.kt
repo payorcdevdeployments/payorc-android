@@ -5,6 +5,9 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -19,6 +22,8 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.buildSpannedString
+import androidx.core.text.inSpans
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -102,14 +107,24 @@ class PayOrcPaymentActivity : AppCompatActivity() {
             finish() // Close the activity
         }
 
-        binding.redirectButton.setOnClickListener {
-            val intent = Intent(PayOrcConstants.PAY_ORC_PAYMENT_RESULT)
-            intent.putExtra(PayOrcConstants.PAYMENT_RESULT_STATUS, true)
-            intent.putExtra(
-                PayOrcConstants.PAYMENT_RESULT_DATA, myRepository.uiState.value.transaction
-            )
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-            finish() // Close the activity
+        binding.redirectButton.apply {
+            text = buildSpannedString {
+                inSpans(
+                    ForegroundColorSpan(context.getColor(android.R.color.black)),
+                    UnderlineSpan()
+                ) {
+                    append(getString(R.string.redirect_now))
+                }
+            }
+            setOnClickListener {
+                val intent = Intent(PayOrcConstants.PAY_ORC_PAYMENT_RESULT)
+                intent.putExtra(PayOrcConstants.PAYMENT_RESULT_STATUS, true)
+                intent.putExtra(
+                    PayOrcConstants.PAYMENT_RESULT_DATA, myRepository.uiState.value.transaction
+                )
+                LocalBroadcastManager.getInstance(this@PayOrcPaymentActivity).sendBroadcast(intent)
+                finish() // Close the activity
+            }
         }
         lifecycleScope.launch {
             myRepository.uiState.collect { uiState ->

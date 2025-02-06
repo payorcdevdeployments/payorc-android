@@ -27,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="#40000000"
         android:orientation="vertical"
         android:padding="16dp"
         android:visibility="gone"
@@ -38,21 +37,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/redirect_button"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
-            android:background="@drawable/bg_button"
             android:gravity="center"
-            android:paddingHorizontal="24dp"
             android:text="@string/redirect_now"
             android:textAllCaps="false"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
     </LinearLayout>
 </FrameLayout>
