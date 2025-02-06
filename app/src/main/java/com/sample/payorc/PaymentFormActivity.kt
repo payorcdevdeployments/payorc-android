@@ -236,18 +236,18 @@ class PaymentFormActivity : AppCompatActivity() {
         binding.etFailureUrl.setText("")
         binding.etCancelUrl.setText("")
         // parameters
-        binding.etParameterAlpha.setText("alpha")
-        binding.etParameterBeta.setText("beta")
-        binding.etParameterGamma.setText("gamma")
-        binding.etParameterDelta.setText("delta")
-        binding.etParameterEpsilon.setText("epsilon")
+        binding.etParameterAlpha.setText("")
+        binding.etParameterBeta.setText("")
+        binding.etParameterGamma.setText("")
+        binding.etParameterDelta.setText("")
+        binding.etParameterEpsilon.setText("")
 
         // custom data
-        binding.etCustomDataAlpha.setText("alpha")
-        binding.etCustomDataBeta.setText("beta")
-        binding.etCustomDataGamma.setText("gamma")
-        binding.etCustomDataDelta.setText("delta")
-        binding.etCustomDataEpsilon.setText("epsilon")
+        binding.etCustomDataAlpha.setText("")
+        binding.etCustomDataBeta.setText("")
+        binding.etCustomDataGamma.setText("")
+        binding.etCustomDataDelta.setText("")
+        binding.etCustomDataEpsilon.setText("")
     }
 
     private fun initSpinner() {
