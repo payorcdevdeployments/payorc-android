@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.esaiamuthan</groupId>
     <artifactId>pay-orc-android</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
     <packaging>pom</packaging>
-    <description>redirect now changes</description>
+    <description>end point changes</description>
 </project>

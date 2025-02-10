@@ -5,7 +5,7 @@ class PayOrcConfig {
     var merchantKey: String? = null
     var merchantSecret: String? = null
     var env: String? = null
-    var versionName: String = "1.0.8"
+    var versionName: String = "1.0.9"
 
     companion object : PayOrcSingleton<PayOrcConfig>(creator = { PayOrcConfig() })
 
