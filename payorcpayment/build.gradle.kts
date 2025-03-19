@@ -70,11 +70,11 @@ dependencies {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "com.github.esaiamuthan"
-            artifactId = "pay-orc-android"
-            version = "1.0.9"
+            groupId = "com.github.payorcdevdeployments"
+            artifactId = "payorc"
+            version = "0.0.1"
             pom {
-                description.set("end point changes")
+                description.set("Initial release")
             }
         }
     }
