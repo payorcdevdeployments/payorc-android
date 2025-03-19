@@ -55,8 +55,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-//    implementation(libs.pay.orc.android)
-    implementation(project(":payorcpayment"))
+
+//    implementation(project(":payorcpayment"))
+    implementation(libs.payorc.android)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

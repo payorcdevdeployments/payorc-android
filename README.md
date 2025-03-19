@@ -22,7 +22,10 @@ Add the following lines to the `app/build.gradle` file:
 ```groovy
 dependencies {
     implementation files('libs/sdk.aar')
+    
+    OR
 
+    implementation "com.github.payorcdevdeployments:payorc-android:0.0.1"
 }
 
 ```
@@ -35,6 +38,10 @@ Add the following lines to the `app/build.gradle.kts` file:
 
 dependencies {
     implementation(files("libs/sdk.aar"))
+    
+    OR
+    
+    implementation("com.github.payorcdevdeployments:payorc-android:0.0.1")
 }
 
 ```

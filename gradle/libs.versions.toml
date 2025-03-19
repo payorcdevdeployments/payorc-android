@@ -10,6 +10,7 @@ material = "1.12.0"
 activity = "1.10.0"
 constraintlayout = "2.2.0"
 payOrcAndroid = "1.0.6"
+payorcAndroidVersion = "0.0.1"
 retrofit = "2.11.0"
 loggingInterceptor = "5.0.0-alpha.12"
 
@@ -23,6 +24,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 pay-orc-android = { module = "com.github.esaiamuthan:pay-orc-android", version.ref = "payOrcAndroid" }
+payorc-android = { module = "com.github.payorcdevdeployments:payorc-android", version.ref = "payorcAndroidVersion" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
