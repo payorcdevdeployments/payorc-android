@@ -193,28 +193,28 @@ import com.payorc.payment.model.order_create.PaymentRequest
             code: "971", // should not include + before code
           ),
           billingDetails: BillingDetails(
-            addressLine1: "address 1",
-            addressLine2: "address 2",
-            city: "Amarpur",
-            province: "Bihar", // state
-            country: "IN", // should be 2 digit country code
-            pin: "482008",
-          ),
-          shippingDetails: ShippingDetails(
+            addressLine1: "Po Box 12322",
+            addressLine2: "Jebel Ali Free Zone",
+            city: "Dubai",
+            province: "Dubai", // state
+            country: "AE", // 2-digit country code
+            pin: "54044",
+        ),
+        shippingDetails: ShippingDetails(
             shippingName: "John Doe",
-            shippingEmail: "",
-            shippingCode: "91", // should not include + before code
-            shippingMobile: "9876543210",
-            addressLine1: "address 1",
-            addressLine2: "address 2",
-            city: "Mumbai",
-            province: "Maharashtra", // state
-            country: "IN", // should be 2 digit country code
-            pin: "482005",
-            locationPin: "https://www.google.com/maps?q=24.227923067092433,80.07790793685352",
-            shippingCurrency: "AED", // should be dynamic currency
-            shippingAmount: "10",
-          ),
+            shippingEmail: "email@company.com",
+            shippingCode: "971", // No plus sign before code
+            shippingMobile: "987654321",
+            addressLine1: "Po Box 12322",
+            addressLine2: "Jebel Ali Free Zone",
+            city: "Dubai",
+            province: "Dubai", // state
+            country: "AE", // 2-digit country code
+            pin: "54044",
+            locationPin: "{URL}", // Placeholder URL
+            shippingCurrency: "AED", // Dynamic currency
+            shippingAmount: "0",
+        ),
           urls: Urls(
             success: "",
             cancel: "",
